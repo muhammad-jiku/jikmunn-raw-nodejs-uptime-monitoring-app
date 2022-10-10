@@ -1,6 +1,7 @@
 // dependencies
 const http = require('http');
 const url = require('url');
+const { StringDecoder } = require('string_decoder');
 
 // app object
 const app = {};
@@ -30,10 +31,23 @@ app.handleReqRes = (req, res) => {
   const queryStringObject = parsedUrl.query;
   const headersObject = req.headers;
 
-  console.log(headersObject);
+  const decoder = new StringDecoder('utf-8');
+  let realData = '';
 
-  // response handle
-  res.end('Hello World!!');
+  // payload or body in the request
+  // receivng buffer
+  req.on('data', (buffer) => {
+    // converting buffer to data
+    realData += decoder.write(buffer);
+  });
+
+  // triggering stop receiving buffer
+  req.on('end', () => {
+    realData += decoder.end();
+    console.log(realData);
+    // response handle
+    res.end('Hello World!!');
+  });
 };
 
 // starting the server
