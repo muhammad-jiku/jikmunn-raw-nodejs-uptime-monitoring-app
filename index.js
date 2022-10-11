@@ -16,14 +16,14 @@ const app = {};
 //  crud operation check starts
 
 // create data
-// data.create(
-//   'test',
-//   'personalInfo',
-//   { name: 'Jiku', nationality: 'Bangladesh' },
-//   (err) => {
-//     console.log(`error was ${err}`);
-//   }
-// );
+data.create(
+  'test',
+  'details',
+  { name: 'Jiku', nationality: 'Bangladesh' },
+  (err) => {
+    console.log(`error was ${err}`);
+  }
+);
 
 // read data
 // data.read('test', 'personalInfo', (err, data) => {
@@ -31,19 +31,19 @@ const app = {};
 // });
 
 // update data
-data.update(
-  'test',
-  'personalInfo',
-  {
-    name: 'Muhammad Azizul Hoque Jiku ',
-    nationality: 'Bangladeshi',
-    religion: 'Islam',
-    hometown: 'Feni',
-  },
-  (err) => {
-    console.log(`error was ${err}`);
-  }
-);
+// data.update(
+//   'test',
+//   'personalInfo',
+//   {
+//     name: 'Muhammad Azizul Hoque Jiku ',
+//     nationality: 'Bangladeshi',
+//     religion: 'Islam',
+//     hometown: 'Feni',
+//   },
+//   (err) => {
+//     console.log(`error was ${err}`);
+//   }
+// );
 
 // create server
 app.createServer = () => {
