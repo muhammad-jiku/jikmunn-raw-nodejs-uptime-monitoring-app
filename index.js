@@ -14,14 +14,21 @@ const app = {};
 
 // testing file system
 //  crud operation check starts
-data.create(
-  'test',
-  'personalInfo',
-  { name: 'Jiku', nationality: 'Bangladesh' },
-  (err) => {
-    console.log(`error was ${err}`);
-  }
-);
+
+// create data
+// data.create(
+//   'test',
+//   'personalInfo',
+//   { name: 'Jiku', nationality: 'Bangladesh' },
+//   (err) => {
+//     console.log(`error was ${err}`);
+//   }
+// );
+
+// read data
+data.read('test', 'personalInfo', (err, data) => {
+  console.log(err, data);
+});
 
 // create server
 app.createServer = () => {
