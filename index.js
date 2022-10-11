@@ -26,9 +26,24 @@ const app = {};
 // );
 
 // read data
-data.read('test', 'personalInfo', (err, data) => {
-  console.log(err, data);
-});
+// data.read('test', 'personalInfo', (err, data) => {
+//   console.log(err, data);
+// });
+
+// update data
+data.update(
+  'test',
+  'personalInfo',
+  {
+    name: 'Muhammad Azizul Hoque Jiku ',
+    nationality: 'Bangladeshi',
+    religion: 'Islam',
+    hometown: 'Feni',
+  },
+  (err) => {
+    console.log(`error was ${err}`);
+  }
+);
 
 // create server
 app.createServer = () => {
