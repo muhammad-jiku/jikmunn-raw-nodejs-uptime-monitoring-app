@@ -2,6 +2,7 @@
 const http = require('http');
 const environment = require('./helpers/environments');
 const { handleReqRes } = require('./helpers/handleReqRes');
+const data = require('./lib/data');
 
 // app object
 const app = {};
@@ -10,6 +11,17 @@ const app = {};
 // app.config = {
 //   port: 4000,
 // };
+
+// testing file system
+//  crud operation check starts
+data.create(
+  'test',
+  'personalInfo',
+  { name: 'Jiku', nationality: 'Bangladesh' },
+  (err) => {
+    console.log(`error was ${err}`);
+  }
+);
 
 // create server
 app.createServer = () => {
