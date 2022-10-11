@@ -46,9 +46,9 @@ const app = {};
 // );
 
 // delete data
-data.delete('test', 'details', (err) => {
-  console.log(err);
-});
+// data.delete('test', 'details', (err) => {
+//   console.log(err);
+// });
 
 // create server
 app.createServer = () => {
