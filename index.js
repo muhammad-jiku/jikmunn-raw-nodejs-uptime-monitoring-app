@@ -16,14 +16,14 @@ const app = {};
 //  crud operation check starts
 
 // create data
-data.create(
-  'test',
-  'details',
-  { name: 'Jiku', nationality: 'Bangladesh' },
-  (err) => {
-    console.log(`error was ${err}`);
-  }
-);
+// data.create(
+//   'test',
+//   'details',
+//   { name: 'Jiku', nationality: 'Bangladesh' },
+//   (err) => {
+//     console.log(`error was ${err}`);
+//   }
+// );
 
 // read data
 // data.read('test', 'personalInfo', (err, data) => {
@@ -44,6 +44,11 @@ data.create(
 //     console.log(`error was ${err}`);
 //   }
 // );
+
+// delete data
+data.delete('test', 'details', (err) => {
+  console.log(err);
+});
 
 // create server
 app.createServer = () => {
