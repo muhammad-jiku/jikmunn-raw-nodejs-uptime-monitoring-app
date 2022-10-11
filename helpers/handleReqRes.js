@@ -59,7 +59,7 @@ handler.handleReqRes = (req, res) => {
   // triggering stop receiving buffer
   req.on('end', () => {
     realData += decoder.end();
-    console.log(realData);
+    // console.log(realData);
     // response handle
     res.end('Hello World!!');
   });

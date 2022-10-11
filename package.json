@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  },
   "scripts": {
-    "start": "node index.js",
-    "serve": "nodemon index.js",
+    "start": "cross-env NODE_ENV=staging node index.js",
+    "start-dev": "cross-env NODE_ENV=production node index.js",
+    "serve": "cross-env NODE_ENV=staging nodemon index.js",
+    "production": "cross-env NODE_ENV=production nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
