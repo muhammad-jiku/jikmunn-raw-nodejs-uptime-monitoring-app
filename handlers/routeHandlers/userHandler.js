@@ -50,7 +50,7 @@ handler._users.get = (requestedProperties, callback) => {
 
 // post method
 handler._users.post = (requestedProperties, callback) => {
-  console.log(requestedProperties);
+  // console.log(requestedProperties);
   const firstName =
     typeof requestedProperties.body?.firstName === 'string' &&
     requestedProperties.body.firstName.trim().length > 0
@@ -121,7 +121,75 @@ handler._users.post = (requestedProperties, callback) => {
 };
 
 // put method
-handler._users.put = (requestedProperties, callback) => {};
+handler._users.put = (requestedProperties, callback) => {
+  const firstName =
+    typeof requestedProperties.body?.firstName === 'string' &&
+    requestedProperties.body.firstName.trim().length > 0
+      ? requestedProperties.body.firstName
+      : false;
+
+  const lastName =
+    typeof requestedProperties.body?.lastName === 'string' &&
+    requestedProperties.body.lastName.trim().length > 0
+      ? requestedProperties.body.lastName
+      : false;
+
+  const phone =
+    typeof requestedProperties.body?.phone === 'string' &&
+    requestedProperties.body.phone.trim().length === 11
+      ? requestedProperties.body.phone
+      : false;
+
+  const password =
+    typeof requestedProperties.body?.password === 'string' &&
+    requestedProperties.body.password.trim().length > 0
+      ? requestedProperties.body.password
+      : false;
+
+  if (phone) {
+    if (firstName || lastName || password) {
+      data.read('users', phone, (err, userInfo) => {
+        const userData = { ...parseJSON(userInfo) };
+        if (!err && userData) {
+          if (firstName) {
+            userData.firstName = firstName;
+          }
+          if (lastName) {
+            userData.lastName = lastName;
+          }
+          if (password) {
+            userData.password = hashedPassword(password);
+          }
+
+          // store data to the server
+          data.update('users', phone, userData, (err2) => {
+            if (!err2) {
+              callback(200, {
+                message: 'User information updated successfully!',
+              });
+            } else {
+              callback(500, {
+                error: 'There was a problem in the server side!!',
+              });
+            }
+          });
+        } else {
+          callback(400, {
+            error: 'Your request have a problem!!',
+          });
+        }
+      });
+    } else {
+      callback(400, {
+        error: 'Something went wrong! Please try again!!',
+      });
+    }
+  } else {
+    callback(400, {
+      error: 'Invalid phone number! Please try again!!',
+    });
+  }
+};
 
 // delete method
 handler._users.delete = (requestedProperties, callback) => {};
