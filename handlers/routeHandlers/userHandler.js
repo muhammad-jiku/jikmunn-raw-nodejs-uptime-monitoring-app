@@ -1,5 +1,6 @@
 // dependencies
 const data = require('../../lib/data');
+const { hashedPassword } = require('../../helpers/utilities');
 
 // module scaffolding
 const handler = {};
@@ -65,6 +66,7 @@ handler._users.post = (requestedProperties, callback) => {
           firstName,
           lastName,
           phone,
+          password: hashedPassword(password),
           tosAgreement,
         };
       } else {
