@@ -13,14 +13,14 @@ utilities.parseJSON = (joinString) => {
   } catch {
     output = {};
   }
-
+  console.log(output);
   return output;
 };
 
 // hash password
 utilities.hashedPassword = (str) => {
   if (typeof str === 'string' && str.length > 0) {
-    const secret = environment[process.env.NODE_ENV].secretKey;
+    const secret = environment.secretKey;
     const hash = crypto.createHmac('sha256', secret).update(str).digest('hex');
 
     return hash;

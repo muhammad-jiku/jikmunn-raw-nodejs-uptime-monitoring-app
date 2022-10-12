@@ -39,18 +39,6 @@ handler.handleReqRes = (req, res) => {
     ? routes[trimmedPath]
     : notFoundHandler;
 
-  chosenHandler(requestedProperties, (statusCode, payload) => {
-    statusCode = typeof statusCode === 'number' ? statusCode : 500;
-    payload = typeof payload === 'object' ? payload : {};
-
-    const payloadString = JSON.stringify(payload);
-
-    // returning final response
-    res.setHeader('Content-Type', 'application/json');
-    res.writeHead(statusCode);
-    res.end(payloadString);
-  });
-
   // payload or body in the request
   // receivng buffer
   req.on('data', (buffer) => {
@@ -65,9 +53,21 @@ handler.handleReqRes = (req, res) => {
     // receiving data from users
     requestedProperties.body = parseJSON(realData);
 
-    // console.log(realData);
+    chosenHandler(requestedProperties, (statusCode, payload) => {
+      statusCode = typeof statusCode === 'number' ? statusCode : 500;
+      payload = typeof payload === 'object' ? payload : {};
+
+      const payloadString = JSON.stringify(payload);
+
+      // returning final response
+      res.setHeader('Content-Type', 'application/json');
+      res.writeHead(statusCode);
+      res.end(payloadString);
+    });
+
+    // console.log(requestedProperties);
     // response handle
-    res.end('Hello World!!');
+    // res.end('Hello World!!');
   });
 };
 

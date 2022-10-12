@@ -29,38 +29,40 @@ handler._users.get = (requestedProperties, callback) => {
 
 // post method
 handler._users.post = (requestedProperties, callback) => {
+  console.log(requestedProperties);
   const firstName =
-    typeof requestedProperties.body.firstName === 'string' &&
+    typeof requestedProperties.body?.firstName === 'string' &&
     requestedProperties.body.firstName.trim().length > 0
       ? requestedProperties.body.firstName
       : false;
 
   const lastName =
-    typeof requestedProperties.body.lastName === 'string' &&
+    typeof requestedProperties.body?.lastName === 'string' &&
     requestedProperties.body.lastName.trim().length > 0
       ? requestedProperties.body.lastName
       : false;
 
   const phone =
-    typeof requestedProperties.body.phone === 'string' &&
+    typeof requestedProperties.body?.phone === 'string' &&
     requestedProperties.body.phone.trim().length === 11
       ? requestedProperties.body.phone
       : false;
 
   const password =
-    typeof requestedProperties.body.password === 'string' &&
+    typeof requestedProperties.body?.password === 'string' &&
     requestedProperties.body.password.trim().length > 0
       ? requestedProperties.body.password
       : false;
 
   const tosAgreement =
-    typeof requestedProperties.body.tosAgreement === 'string' &&
-    requestedProperties.body.tosAgreement.trim().length > 0
+    typeof requestedProperties.body?.tosAgreement === 'boolean'
       ? requestedProperties.body.tosAgreement
       : false;
 
+  console.log(firstName, lastName, phone, password, tosAgreement);
+
   if (firstName && lastName && phone && password && tosAgreement) {
-    data.read('users', phone, (err, usersResult) => {
+    data.read('users', phone, (err) => {
       if (err) {
         let userDetails = {
           firstName,
@@ -69,6 +71,20 @@ handler._users.post = (requestedProperties, callback) => {
           password: hashedPassword(password),
           tosAgreement,
         };
+
+        // store the users info to the db
+        data.create('users', phone, userDetails, (err2) => {
+          if (!err2) {
+            callback(200, {
+              message: 'User information added to the database successfully!!',
+            });
+          } else {
+            callback(500, {
+              error:
+                'Sorry! fail to create user information! try again later!!',
+            });
+          }
+        });
       } else {
         callback(500, {
           error:
