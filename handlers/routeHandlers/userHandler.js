@@ -1,6 +1,6 @@
 // dependencies
 const data = require('../../lib/data');
-const { hashedPassword } = require('../../helpers/utilities');
+const { hashedPassword, parseJSON } = require('../../helpers/utilities');
 
 // module scaffolding
 const handler = {};
@@ -22,9 +22,30 @@ handler._users = {};
 
 // get method
 handler._users.get = (requestedProperties, callback) => {
-  callback(200, {
-    message: 'This is users route!!',
-  });
+  // checking the user validation based on number validation
+  const phone =
+    typeof requestedProperties.queryStringObject?.phone === 'string' &&
+    requestedProperties.queryStringObject.phone.trim().length === 11
+      ? requestedProperties.queryStringObject.phone
+      : false;
+
+  if (phone) {
+    data.read('users', phone, (err, userData) => {
+      const user = { ...parseJSON(userData) };
+      if (!err && user) {
+        delete user?.password;
+        callback(200, user);
+      } else {
+        callback(404, {
+          error: 'Requested user not found!!',
+        });
+      }
+    });
+  } else {
+    callback(404, {
+      error: 'Requested user not found!!',
+    });
+  }
 };
 
 // post method
