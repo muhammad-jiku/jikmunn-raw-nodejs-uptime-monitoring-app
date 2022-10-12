@@ -5,6 +5,7 @@ const routes = require('../routes');
 const {
   notFoundHandler,
 } = require('../handlers/routeHandlers/notFoundHandler');
+const { parseJSON } = require('./utilities');
 
 // module scaffolding
 const handler = {};
@@ -60,6 +61,10 @@ handler.handleReqRes = (req, res) => {
   // triggering stop receiving buffer
   req.on('end', () => {
     realData += decoder.end();
+
+    // receiving data from users
+    requestedProperties.body = parseJSON(realData);
+
     // console.log(realData);
     // response handle
     res.end('Hello World!!');
