@@ -192,6 +192,39 @@ handler._users.put = (requestedProperties, callback) => {
 };
 
 // delete method
-handler._users.delete = (requestedProperties, callback) => {};
+handler._users.delete = (requestedProperties, callback) => {
+  // checking the user validation based on number validation
+  const phone =
+    typeof requestedProperties.queryStringObject?.phone === 'string' &&
+    requestedProperties.queryStringObject.phone.trim().length === 11
+      ? requestedProperties.queryStringObject.phone
+      : false;
+
+  if (phone) {
+    data.read('users', phone, (err, userData) => {
+      if (!err && userData) {
+        data.delete('users', phone, (err2) => {
+          if (!err2) {
+            callback(200, {
+              message: ' User details removed successfully!!',
+            });
+          } else {
+            callback(500, {
+              error: 'There was a server side error!!',
+            });
+          }
+        });
+      } else {
+        callback(500, {
+          error: 'Sorry! server has some issues!!',
+        });
+      }
+    });
+  } else {
+    callback(400, {
+      error: 'Something wen wrong during the request! Please try again later!!',
+    });
+  }
+};
 
 module.exports = handler;
