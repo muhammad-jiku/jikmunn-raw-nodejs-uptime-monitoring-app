@@ -57,7 +57,7 @@ handler._token.post = (requestedProperties, callback) => {
         let expiresInTime = Date.now() + 60 * 60 * 1000;
         let tokenObject = {
           phone,
-          tokenId,
+          id: tokenId,
           expiresInTime,
         };
 
