@@ -25,7 +25,31 @@ handler.tokenHandler = (requestedProperties, callback) => {
 handler._token = {};
 
 // get method
-handler._token.get = (requestedProperties, callback) => {};
+handler._token.get = (requestedProperties, callback) => {
+  // checking the user validation based on token id validation
+  const id =
+    typeof requestedProperties.queryStringObject?.id === 'string' &&
+    requestedProperties.queryStringObject.id.trim().length === 20
+      ? requestedProperties.queryStringObject.id
+      : false;
+
+  if (id) {
+    data.read('tokens', id, (err, tokenInfo) => {
+      const tokenData = { ...parseJSON(tokenInfo) };
+      if (!err && tokenData) {
+        callback(200, tokenData);
+      } else {
+        callback(404, {
+          error: 'Requested token for the id is not found!!',
+        });
+      }
+    });
+  } else {
+    callback(404, {
+      error: 'Requested token for the id is not found!!',
+    });
+  }
+};
 
 // post method
 handler._token.post = (requestedProperties, callback) => {
