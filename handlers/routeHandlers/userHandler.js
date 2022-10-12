@@ -200,6 +200,7 @@ handler._users.delete = (requestedProperties, callback) => {
       ? requestedProperties.queryStringObject.phone
       : false;
 
+  // searching user data  based on phone
   if (phone) {
     data.read('users', phone, (err, userData) => {
       if (!err && userData) {
