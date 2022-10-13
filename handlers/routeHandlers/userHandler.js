@@ -76,8 +76,9 @@ handler._users.post = (requestedProperties, callback) => {
       : false;
 
   const tosAgreement =
-    typeof requestedProperties.body?.tosAgreement === 'boolean'
-      ? requestedProperties.body.tosAgreement
+    typeof requestedProperties.body?.tosAgreement === 'boolean' &&
+    requestedProperties.body?.tosAgreement === true
+      ? true
       : false;
 
   console.log(firstName, lastName, phone, password, tosAgreement);
