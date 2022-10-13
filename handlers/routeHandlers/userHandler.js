@@ -211,38 +211,6 @@ handler._users.put = (requestedProperties, callback) => {
           });
         }
       });
-
-      // data.read('users', phone, (err, userInfo) => {
-      //   const userData = { ...parseJSON(userInfo) };
-      //   if (!err && userData) {
-      //     if (firstName) {
-      //       userData.firstName = firstName;
-      //     }
-      //     if (lastName) {
-      //       userData.lastName = lastName;
-      //     }
-      //     if (password) {
-      //       userData.password = hashedPassword(password);
-      //     }
-
-      //     // store data to the server
-      //     data.update('users', phone, userData, (err2) => {
-      //       if (!err2) {
-      //         callback(200, {
-      //           message: 'User information updated successfully!',
-      //         });
-      //       } else {
-      //         callback(500, {
-      //           error: 'There was a problem in the server side!!',
-      //         });
-      //       }
-      //     });
-      //   } else {
-      //     callback(400, {
-      //       error: 'Your request have a problem!!',
-      //     });
-      //   }
-      // });
     } else {
       callback(400, {
         error: 'Something went wrong! Please try again!!',
@@ -266,25 +234,61 @@ handler._users.delete = (requestedProperties, callback) => {
 
   // searching user data  based on phone
   if (phone) {
-    data.read('users', phone, (err, userData) => {
-      if (!err && userData) {
-        data.delete('users', phone, (err2) => {
-          if (!err2) {
-            callback(200, {
-              message: ' User details removed successfully!!',
+    // verify token
+    let token =
+      typeof requestedProperties.headersObject.token === 'string'
+        ? requestedProperties.headersObject.token
+        : false;
+
+    // console.log(tokenHandler._token);
+    // console.log(_token);
+    _token.verify(token, phone, (tokenId) => {
+      if (tokenId) {
+        data.read('users', phone, (err, userData) => {
+          if (!err && userData) {
+            data.delete('users', phone, (err2) => {
+              if (!err2) {
+                callback(200, {
+                  message: ' User details removed successfully!!',
+                });
+              } else {
+                callback(500, {
+                  error: 'There was a server side error!!',
+                });
+              }
             });
           } else {
             callback(500, {
-              error: 'There was a server side error!!',
+              error: 'Sorry! server has some issues!!',
             });
           }
         });
       } else {
-        callback(500, {
-          error: 'Sorry! server has some issues!!',
+        callback(403, {
+          error: 'Authentication failed!',
         });
       }
     });
+
+    // data.read('users', phone, (err, userData) => {
+    //   if (!err && userData) {
+    //     data.delete('users', phone, (err2) => {
+    //       if (!err2) {
+    //         callback(200, {
+    //           message: ' User details removed successfully!!',
+    //         });
+    //       } else {
+    //         callback(500, {
+    //           error: 'There was a server side error!!',
+    //         });
+    //       }
+    //     });
+    //   } else {
+    //     callback(500, {
+    //       error: 'Sorry! server has some issues!!',
+    //     });
+    //   }
+    // });
   } else {
     callback(400, {
       error: 'Something wen wrong during the request! Please try again later!!',
