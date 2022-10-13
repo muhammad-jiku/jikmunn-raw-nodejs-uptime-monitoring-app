@@ -147,6 +147,40 @@ handler._token.put = (requestedProperties, callback) => {
 };
 
 // delete method
-handler._token.delete = (requestedProperties, callback) => {};
+handler._token.delete = (requestedProperties, callback) => {
+  // checking the user validation based on token id validation
+  const id =
+    typeof requestedProperties.queryStringObject?.id === 'string' &&
+    requestedProperties.queryStringObject.id.trim().length === 20
+      ? requestedProperties.queryStringObject.id
+      : false;
+
+  // searching user data  based on token id
+  if (id) {
+    data.read('tokens', id, (err, tokenData) => {
+      if (!err && tokenData) {
+        data.delete('tokens', id, (err2) => {
+          if (!err2) {
+            callback(200, {
+              message: 'Token deleted successfully!!',
+            });
+          } else {
+            callback(500, {
+              error: 'There was a server side error!!',
+            });
+          }
+        });
+      } else {
+        callback(500, {
+          error: 'Sorry! server has some issues!!',
+        });
+      }
+    });
+  } else {
+    callback(400, {
+      error: 'Something wen wrong during the request! Please try again later!!',
+    });
+  }
+};
 
 module.exports = handler;
