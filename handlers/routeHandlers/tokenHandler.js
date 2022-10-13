@@ -109,7 +109,42 @@ handler._token.post = (requestedProperties, callback) => {
 };
 
 // put method
-handler._token.put = (requestedProperties, callback) => {};
+handler._token.put = (requestedProperties, callback) => {
+  const id =
+    typeof requestedProperties.body?.id === 'string' &&
+    requestedProperties.body.id.trim().length === 20
+      ? requestedProperties.body.id
+      : false;
+  const extend =
+    typeof requestedProperties.body?.extend === 'boolean' &&
+    requestedProperties.body?.extend === true
+      ? true
+      : false;
+
+  if (id && extend) {
+    data.read('tokens', id, (err, tokenData) => {
+      const token = parseJSON(tokenData);
+      if (token.expiresInTime > Date.now()) {
+        token.expiresInTime = Date.now() + 60 * 60 * 1000;
+
+        // store the updated token
+        data.update('tokens', id, token, (err2) => {
+          if (!err2) {
+            callback(200);
+          } else {
+            callback(500, {
+              error: 'There was an error in server side!',
+            });
+          }
+        });
+      } else {
+        callback(400, { error: 'Token is already expired!' });
+      }
+    });
+  } else {
+    callback(400, { error: 'There is an error in the request!' });
+  }
+};
 
 // delete method
 handler._token.delete = (requestedProperties, callback) => {};
