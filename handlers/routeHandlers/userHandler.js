@@ -1,7 +1,7 @@
 // dependencies
 const data = require('../../lib/data');
 const { hashedPassword, parseJSON } = require('../../helpers/utilities');
-const { tokenHandler, _token } = require('./tokenHandler');
+const { _token } = require('./tokenHandler');
 
 // module scaffolding
 const handler = {};
@@ -269,26 +269,6 @@ handler._users.delete = (requestedProperties, callback) => {
         });
       }
     });
-
-    // data.read('users', phone, (err, userData) => {
-    //   if (!err && userData) {
-    //     data.delete('users', phone, (err2) => {
-    //       if (!err2) {
-    //         callback(200, {
-    //           message: ' User details removed successfully!!',
-    //         });
-    //       } else {
-    //         callback(500, {
-    //           error: 'There was a server side error!!',
-    //         });
-    //       }
-    //     });
-    //   } else {
-    //     callback(500, {
-    //       error: 'Sorry! server has some issues!!',
-    //     });
-    //   }
-    // });
   } else {
     callback(400, {
       error: 'Something wen wrong during the request! Please try again later!!',
