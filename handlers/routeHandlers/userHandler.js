@@ -1,6 +1,7 @@
 // dependencies
 const data = require('../../lib/data');
 const { hashedPassword, parseJSON } = require('../../helpers/utilities');
+const { tokenHandler, _token } = require('./tokenHandler');
 
 // module scaffolding
 const handler = {};
@@ -30,14 +31,30 @@ handler._users.get = (requestedProperties, callback) => {
       : false;
 
   if (phone) {
-    data.read('users', phone, (err, userData) => {
-      const user = { ...parseJSON(userData) };
-      if (!err && user) {
-        delete user?.password;
-        callback(200, user);
+    // verify token
+    let token =
+      typeof requestedProperties.headersObject.token === 'string'
+        ? requestedProperties.headersObject.token
+        : false;
+
+    // console.log(tokenHandler._token);
+    // console.log(_token);
+    _token.verify(token, phone, (tokenId) => {
+      if (tokenId) {
+        data.read('users', phone, (err, userData) => {
+          const user = { ...parseJSON(userData) };
+          if (!err && user) {
+            delete user?.password;
+            callback(200, user);
+          } else {
+            callback(404, {
+              error: 'Requested user not found!!',
+            });
+          }
+        });
       } else {
-        callback(404, {
-          error: 'Requested user not found!!',
+        callback(403, {
+          error: 'Authentication failed!',
         });
       }
     });
@@ -149,37 +166,83 @@ handler._users.put = (requestedProperties, callback) => {
 
   if (phone) {
     if (firstName || lastName || password) {
-      data.read('users', phone, (err, userInfo) => {
-        const userData = { ...parseJSON(userInfo) };
-        if (!err && userData) {
-          if (firstName) {
-            userData.firstName = firstName;
-          }
-          if (lastName) {
-            userData.lastName = lastName;
-          }
-          if (password) {
-            userData.password = hashedPassword(password);
-          }
+      // verify token
+      let token =
+        typeof requestedProperties.headersObject.token === 'string'
+          ? requestedProperties.headersObject.token
+          : false;
 
-          // store data to the server
-          data.update('users', phone, userData, (err2) => {
-            if (!err2) {
-              callback(200, {
-                message: 'User information updated successfully!',
+      _token.verify(token, phone, (tokenId) => {
+        if (tokenId) {
+          data.read('users', phone, (err, userInfo) => {
+            const userData = { ...parseJSON(userInfo) };
+            if (!err && userData) {
+              if (firstName) {
+                userData.firstName = firstName;
+              }
+              if (lastName) {
+                userData.lastName = lastName;
+              }
+              if (password) {
+                userData.password = hashedPassword(password);
+              }
+
+              // store data to the server
+              data.update('users', phone, userData, (err2) => {
+                if (!err2) {
+                  callback(200, {
+                    message: 'User information updated successfully!',
+                  });
+                } else {
+                  callback(500, {
+                    error: 'There was a problem in the server side!!',
+                  });
+                }
               });
             } else {
-              callback(500, {
-                error: 'There was a problem in the server side!!',
+              callback(400, {
+                error: 'Your request have a problem!!',
               });
             }
           });
         } else {
-          callback(400, {
-            error: 'Your request have a problem!!',
+          callback(403, {
+            error: 'Authentication failed!',
           });
         }
       });
+
+      // data.read('users', phone, (err, userInfo) => {
+      //   const userData = { ...parseJSON(userInfo) };
+      //   if (!err && userData) {
+      //     if (firstName) {
+      //       userData.firstName = firstName;
+      //     }
+      //     if (lastName) {
+      //       userData.lastName = lastName;
+      //     }
+      //     if (password) {
+      //       userData.password = hashedPassword(password);
+      //     }
+
+      //     // store data to the server
+      //     data.update('users', phone, userData, (err2) => {
+      //       if (!err2) {
+      //         callback(200, {
+      //           message: 'User information updated successfully!',
+      //         });
+      //       } else {
+      //         callback(500, {
+      //           error: 'There was a problem in the server side!!',
+      //         });
+      //       }
+      //     });
+      //   } else {
+      //     callback(400, {
+      //       error: 'Your request have a problem!!',
+      //     });
+      //   }
+      // });
     } else {
       callback(400, {
         error: 'Something went wrong! Please try again!!',
