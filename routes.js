@@ -1,8 +1,8 @@
 // dependecies
+const { checkHandler } = require('./handlers/routeHandlers/checkHandler');
 const { sampleHandler } = require('./handlers/routeHandlers/sampleHandler');
 const { tokenHandler } = require('./handlers/routeHandlers/tokenHandler');
 const { userHandler } = require('./handlers/routeHandlers/userHandler');
-const { checkHandler } = require('./handlers/routeHandlers/checkHandler');
 
 const routes = {
   sample: sampleHandler,

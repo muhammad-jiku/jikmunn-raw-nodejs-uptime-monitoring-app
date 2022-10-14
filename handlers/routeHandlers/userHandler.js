@@ -98,7 +98,7 @@ handler._users.post = (requestedProperties, callback) => {
       ? true
       : false;
 
-  console.log(firstName, lastName, phone, password, tosAgreement);
+  // console.log(firstName, lastName, phone, password, tosAgreement);
 
   if (firstName && lastName && phone && password && tosAgreement) {
     data.read('users', phone, (err) => {
