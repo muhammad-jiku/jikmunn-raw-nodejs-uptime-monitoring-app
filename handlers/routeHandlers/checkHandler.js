@@ -23,7 +23,41 @@ handler.checkHandler = (requestedProperties, callback) => {
 handler._check = {};
 
 // get method
-handler._check.get = (requestedProperties, callback) => {};
+handler._check.get = (requestedProperties, callback) => {
+  // checking the user validation based on checkId validation
+  const id =
+    typeof requestedProperties.queryStringObject?.id === 'string' &&
+    requestedProperties.queryStringObject.id.trim().length === 20
+      ? requestedProperties.queryStringObject.id
+      : false;
+
+  if (id) {
+    // verify token
+    let token =
+      typeof requestedProperties.headersObject.token === 'string'
+        ? requestedProperties.headersObject.token
+        : false;
+
+    data.read('checks', id, (err, checkData) => {
+      const checkInfo = parseJSON(checkData);
+      if (!err && checkInfo) {
+        _token.verify(token, checkInfo.userPhone, (isTokenValid) => {
+          if (isTokenValid) {
+            callback(200, checkInfo);
+          } else {
+            callback(403, { error: 'Authentication error' });
+          }
+        });
+      } else {
+        callback(500, { error: 'You have a problem' });
+      }
+    });
+  } else {
+    callback(400, {
+      error: 'There is a problem in the request you just made!',
+    });
+  }
+};
 
 // post method
 handler._check.post = (requestedProperties, callback) => {
