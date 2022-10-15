@@ -95,7 +95,7 @@ handler._check.post = (requestedProperties, callback) => {
       ? requestedProperties.body.successCodes
       : false;
 
-  console.log(protocol, url, method, successCodes, timeoutSeconds);
+  // console.log(protocol, url, method, successCodes, timeoutSeconds);
 
   if (protocol && url && method && successCodes && timeoutSeconds) {
     // verify token
@@ -188,7 +188,110 @@ handler._check.post = (requestedProperties, callback) => {
 };
 
 // put method
-handler._check.put = (requestedProperties, callback) => {};
+handler._check.put = (requestedProperties, callback) => {
+  // id validation
+  const id =
+    typeof requestedProperties.body?.id === 'string' &&
+    requestedProperties.body.id.trim().length === 20
+      ? requestedProperties.body.id
+      : false;
+
+  // validate inputs
+  const protocol =
+    typeof requestedProperties.body.protocol === 'string' &&
+    ['http', 'https'].indexOf(requestedProperties.body.protocol) > -1
+      ? requestedProperties.body.protocol
+      : false;
+
+  const url =
+    typeof requestedProperties.body.url === 'string' &&
+    requestedProperties.body.url.trim().length > 0
+      ? requestedProperties.body.url
+      : false;
+
+  const method =
+    typeof requestedProperties.body.method === 'string' &&
+    ['GET', 'POST', 'PUT', 'DELETE'].indexOf(requestedProperties.body.method) >
+      -1
+      ? requestedProperties.body.method
+      : false;
+
+  const successCodes =
+    typeof requestedProperties.body.successCodes === 'object' &&
+    requestedProperties.body.successCodes instanceof Array
+      ? requestedProperties.body.successCodes
+      : false;
+
+  const timeoutSeconds =
+    typeof requestedProperties.body.timeoutSeconds === 'number' &&
+    requestedProperties.body.timeoutSeconds % 1 === 0 &&
+    requestedProperties.body.timeoutSeconds >= 1 &&
+    requestedProperties.body.timeoutSeconds <= 5
+      ? requestedProperties.body.successCodes
+      : false;
+
+  // console.log(id);
+  if (id) {
+    if (protocol || url || method || successCodes || timeoutSeconds) {
+      // checking data on checkk route
+      data.read('checks', id, (err, checkData) => {
+        console.log(checkData);
+        if (!err && checkData) {
+          const checkObject = parseJSON(checkData);
+
+          // verify token
+          let token =
+            typeof requestedProperties.headersObject.token === 'string'
+              ? requestedProperties.headersObject.token
+              : false;
+
+          _token.verify(token, checkObject.userPhone, (isTokenValid) => {
+            if (isTokenValid) {
+              if (protocol) {
+                checkObject.protocol = protocol;
+              }
+              if (url) {
+                checkObject.url = url;
+              }
+              if (method) {
+                checkObject.method = method;
+              }
+              if (successCodes) {
+                checkObject.successCodes = successCodes;
+              }
+              if (timeoutSeconds) {
+                checkObject.timeoutSeconds = timeoutSeconds;
+              }
+
+              //  update the stored data in checks
+              data.update('checks', id, checkObject, (err2) => {
+                if (!err2) {
+                  callback(200);
+                } else {
+                  callback(500, { error: 'Server side error!' });
+                }
+              });
+            } else {
+              callback(403, { error: 'authentication failed' });
+            }
+          });
+        } else {
+          callback(500, {
+            error: 'There is a server side error in your request, Sir!',
+          });
+        }
+      });
+    } else {
+      callback(400, {
+        error: 'There is a problem in your request, Sir!',
+      });
+    }
+  } else {
+    callback(400, {
+      error: 'There is a problem in your request, Sir',
+    });
+  }
+};
 
 // delete method
 handler._check.delete = (requestedProperties, callback) => {};

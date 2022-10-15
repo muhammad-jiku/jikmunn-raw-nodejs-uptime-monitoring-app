@@ -1,0 +1,9 @@
+{
+  "id": "rwbna6hd8uh46rq7d0ty",
+  "userPhone": "01832278260",
+  "protocol": "https",
+  "url": "Facebook.com",
+  "method": "PUT",
+  "successCodes": [200, 201],
+  "timeoutSeconds": [200, 201]
+}
