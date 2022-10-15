@@ -294,6 +294,87 @@ handler._check.put = (requestedProperties, callback) => {
 };
 
 // delete method
-handler._check.delete = (requestedProperties, callback) => {};
+handler._check.delete = (requestedProperties, callback) => {
+  // checking the user validation based on checkId validation
+  const id =
+    typeof requestedProperties.queryStringObject?.id === 'string' &&
+    requestedProperties.queryStringObject.id.trim().length === 20
+      ? requestedProperties.queryStringObject.id
+      : false;
+
+  if (id) {
+    // verify token
+    let token =
+      typeof requestedProperties.headersObject.token === 'string'
+        ? requestedProperties.headersObject.token
+        : false;
+
+    data.read('checks', id, (err, checkData) => {
+      const checkInfo = parseJSON(checkData);
+      if (!err && checkInfo) {
+        _token.verify(token, checkInfo.userPhone, (isTokenValid) => {
+          if (isTokenValid) {
+            // delete the checked data
+            data.delete('checks', id, (err2) => {
+              if (!err2) {
+                data.read('users', checkInfo.userPhone, (err3, userData) => {
+                  let userObject = parseJSON(userData);
+                  if (!err3 && userData) {
+                    let userChecks =
+                      typeof userObject.checks === 'object' &&
+                      userObject.checks instanceof Array
+                        ? userObject.checks
+                        : [];
+
+                    // remove the deleted checkId  from the users data
+                    let checkPosition = userChecks.indexOf(id);
+                    if (checkPosition > -1) {
+                      userChecks.splice(checkPosition, 1);
+                      // resave the user data
+                      userObject.checks = userChecks;
+
+                      data.update(
+                        'users',
+                        userObject.phone,
+                        userObject,
+                        (err4) => {
+                          if (!err4) {
+                            callback(200);
+                          } else {
+                            callback(500, {
+                              error: 'Server error happens',
+                            });
+                          }
+                        }
+                      );
+                    } else {
+                      callback(400, { error: 'checkId is not found!' });
+                    }
+                  } else {
+                    callback(500, {
+                      error: 'There was a server side problem!!',
+                    });
+                  }
+                });
+              } else {
+                callback(500, {
+                  error: 'There was a server side problem!',
+                });
+              }
+            });
+          } else {
+            callback(403, { error: 'Authentication error' });
+          }
+        });
+      } else {
+        callback(500, { error: 'You have a problem' });
+      }
+    });
+  } else {
+    callback(400, {
+      error: 'There is a problem in the request you just made!',
+    });
+  }
+};
 
 module.exports = handler;

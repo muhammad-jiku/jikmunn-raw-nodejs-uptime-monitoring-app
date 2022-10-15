@@ -1,1 +1,12 @@
-{"firstName":"muhammad abdul","lastName":"kader pintu","phone":"01832278260","password":"da4458d0a52fe70584201f487ce28b90257406da1d3422c0165ac3632a0f3f98","tosAgreement":true,"checks":["8258jidt6eny1o29jayf","pzox7ox50uvsi399l9xa","cl5ifsgvaotr6fics9k3","vhksiutm1ool3jkfkotz","rwbna6hd8uh46rq7d0ty"]}
+{
+  "firstName": "muhammad abdul",
+  "lastName": "kader pintu",
+  "phone": "01832278260",
+  "password": "da4458d0a52fe70584201f487ce28b90257406da1d3422c0165ac3632a0f3f98",
+  "tosAgreement": true,
+  "checks": [
+    "8258jidt6eny1o29jayf",
+    "cl5ifsgvaotr6fics9k3",
+    "vhksiutm1ool3jkfkotz"
+  ]
+}
