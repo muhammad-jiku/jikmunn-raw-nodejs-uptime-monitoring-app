@@ -2,19 +2,28 @@
 const http = require('http');
 const environment = require('./helpers/environments');
 const { handleReqRes } = require('./helpers/handleReqRes');
+const { sendSMS } = require('./helpers/notifications');
 const data = require('./lib/data');
 
 // app object
 const app = {};
 
+//
+sendSMS(
+  '01766253827',
+  'Hello there! This is a top secret message! you should come to visit wwe at Brooklyn! always keep your data on! BYE',
+  (err) => {
+    console.log(`The error is ${err}`);
+  }
+);
+
 // configuration
-// app.config = {
-//   port: 4000,
-// };
+app.config = {
+  port: 4000,
+};
 
 // testing file system
 //  crud operation check starts
-
 // create data
 // data.create(
 //   'test',
