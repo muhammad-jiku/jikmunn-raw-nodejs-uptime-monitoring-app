@@ -92,7 +92,7 @@ handler._check.post = (requestedProperties, callback) => {
     requestedProperties.body.timeoutSeconds % 1 === 0 &&
     requestedProperties.body.timeoutSeconds >= 1 &&
     requestedProperties.body.timeoutSeconds <= 5
-      ? requestedProperties.body.successCodes
+      ? requestedProperties.body.timeoutSeconds
       : false;
 
   // console.log(protocol, url, method, successCodes, timeoutSeconds);
@@ -227,7 +227,7 @@ handler._check.put = (requestedProperties, callback) => {
     requestedProperties.body.timeoutSeconds % 1 === 0 &&
     requestedProperties.body.timeoutSeconds >= 1 &&
     requestedProperties.body.timeoutSeconds <= 5
-      ? requestedProperties.body.successCodes
+      ? requestedProperties.body.timeoutSeconds
       : false;
 
   // console.log(id);

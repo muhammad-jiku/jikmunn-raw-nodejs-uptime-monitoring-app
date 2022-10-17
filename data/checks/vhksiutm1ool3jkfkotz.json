@@ -1,9 +1,1 @@
-{
-  "id": "vhksiutm1ool3jkfkotz",
-  "userPhone": "01832278260",
-  "protocol": "http",
-  "url": "Facebook.com",
-  "method": "PUT",
-  "successCodes": [200, 201],
-  "timeoutSeconds": [200, 201]
-}
+{"id":"vhksiutm1ool3jkfkotz","userPhone":"01832278260","protocol":"http","url":"facebook.com","method":"PUT","successCodes":[200,201,301],"timeoutSeconds":3,"state":"down","lastChecked":1666015205978}

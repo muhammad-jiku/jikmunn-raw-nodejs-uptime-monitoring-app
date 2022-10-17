@@ -1,9 +1,1 @@
-{
-  "id": "8258jidt6eny1o29jayf",
-  "userPhone": "01832278260",
-  "protocol": "http",
-  "url": "Google.com",
-  "method": "GET",
-  "successCodes": [200, 201],
-  "timeoutSeconds": [200, 201]
-}
+{"id":"8258jidt6eny1o29jayf","userPhone":"01832278260","protocol":"http","url":"google.com","method":"GET","successCodes":[200,201,301],"timeoutSeconds":2,"state":"up","lastChecked":1666015203451}
