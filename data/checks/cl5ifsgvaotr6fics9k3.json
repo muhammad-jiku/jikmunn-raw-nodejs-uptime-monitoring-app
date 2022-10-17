@@ -1,1 +1,11 @@
-{"id":"cl5ifsgvaotr6fics9k3","userPhone":"01832278260","protocol":"http","url":"google.com","method":"POST","successCodes":[200,201,301],"timeoutSeconds":4,"state":"down","lastChecked":1666015203146}
+{
+  "id": "cl5ifsgvaotr6fics9k3",
+  "userPhone": "01832278260",
+  "protocol": "http",
+  "url": "google.com",
+  "method": "POST",
+  "successCodes": [200, 201, 301],
+  "timeoutSeconds": 4,
+  "state": "down",
+  "lastChecked": 1666015203146
+}

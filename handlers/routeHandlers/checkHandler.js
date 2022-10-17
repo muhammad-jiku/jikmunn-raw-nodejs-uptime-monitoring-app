@@ -9,7 +9,7 @@ const handler = {};
 
 handler.checkHandler = (requestedProperties, callback) => {
   const acceptedMethods = ['get', 'post', 'put', 'delete'];
-  // console.log(requestedProperties);
+
   if (acceptedMethods?.indexOf(requestedProperties?.method) > -1) {
     handler._check[requestedProperties.method](requestedProperties, callback);
   } else {
@@ -94,8 +94,6 @@ handler._check.post = (requestedProperties, callback) => {
     requestedProperties.body.timeoutSeconds <= 5
       ? requestedProperties.body.timeoutSeconds
       : false;
-
-  // console.log(protocol, url, method, successCodes, timeoutSeconds);
 
   if (protocol && url && method && successCodes && timeoutSeconds) {
     // verify token
@@ -230,12 +228,10 @@ handler._check.put = (requestedProperties, callback) => {
       ? requestedProperties.body.timeoutSeconds
       : false;
 
-  // console.log(id);
   if (id) {
     if (protocol || url || method || successCodes || timeoutSeconds) {
       // checking data on checkk route
       data.read('checks', id, (err, checkData) => {
-        console.log(checkData);
         if (!err && checkData) {
           const checkObject = parseJSON(checkData);
 

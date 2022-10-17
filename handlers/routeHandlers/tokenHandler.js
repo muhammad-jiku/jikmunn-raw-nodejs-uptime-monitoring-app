@@ -11,7 +11,7 @@ const handler = {};
 
 handler.tokenHandler = (requestedProperties, callback) => {
   const acceptedMethods = ['get', 'post', 'put', 'delete'];
-  // console.log(requestedProperties);
+
   if (acceptedMethods?.indexOf(requestedProperties?.method) > -1) {
     handler._token[requestedProperties.method](requestedProperties, callback);
   } else {
@@ -53,8 +53,6 @@ handler._token.get = (requestedProperties, callback) => {
 
 // post method
 handler._token.post = (requestedProperties, callback) => {
-  // console.log(requestedProperties);
-
   const phone =
     typeof requestedProperties.body?.phone === 'string' &&
     requestedProperties.body.phone.trim().length === 11
@@ -67,15 +65,11 @@ handler._token.post = (requestedProperties, callback) => {
       ? requestedProperties.body.password
       : false;
 
-  // console.log(phone, password);
-
   if (phone && password) {
     data.read('users', phone, (err, userInfo) => {
       const userData = { ...parseJSON(userInfo) };
       let convertedHashedPassword = hashedPassword(password);
-      // console.log(convertedHashedPassword);
-      //   console.log(userInfo);
-      // console.log(userData.password);
+
       if (convertedHashedPassword === userData.password) {
         let tokenId = createRandomString(20);
         let expiresInTime = Date.now() + 60 * 60 * 1000;
@@ -198,7 +192,5 @@ handler._token.verify = (id, phone, callback) => {
     }
   });
 };
-
-// console.log(handler);
 
 module.exports = handler;

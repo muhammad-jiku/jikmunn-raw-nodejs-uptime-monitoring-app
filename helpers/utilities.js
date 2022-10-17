@@ -13,7 +13,7 @@ utilities.parseJSON = (joinString) => {
   } catch {
     output = {};
   }
-  // console.log(output);
+
   return output;
 };
 

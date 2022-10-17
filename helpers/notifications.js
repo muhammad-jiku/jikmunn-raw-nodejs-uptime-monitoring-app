@@ -3,8 +3,6 @@ const https = require('https');
 const querystring = require('querystring');
 const { vonageSMS } = require('./environments');
 
-// console.log(https);
-
 // module scaffolding
 const notifications = {};
 
@@ -21,8 +19,6 @@ notifications.sendSMS = (phone, msg, callback) => {
     msg.trim().length <= 1600
       ? msg.trim()
       : false;
-
-  //   console.log(userPhone, userMsg);
 
   if (userPhone && userMsg) {
     // configure the request payload
@@ -51,8 +47,6 @@ notifications.sendSMS = (phone, msg, callback) => {
     const req = https.request(requestDetails, (res) => {
       // get the status of the sent request
       const status = res.statusCode;
-
-      console.log(payload);
 
       // callback successfully if the request went through
       if (status === 200 || status === 201) {

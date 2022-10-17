@@ -8,7 +8,7 @@ const handler = {};
 
 handler.userHandler = (requestedProperties, callback) => {
   const acceptedMethods = ['get', 'post', 'put', 'delete'];
-  // console.log(requestedProperties);
+
   if (acceptedMethods?.indexOf(requestedProperties?.method) > -1) {
     handler._users[requestedProperties.method](requestedProperties, callback);
   } else {
@@ -37,8 +37,6 @@ handler._users.get = (requestedProperties, callback) => {
         ? requestedProperties.headersObject.token
         : false;
 
-    // console.log(tokenHandler._token);
-    // console.log(_token);
     _token.verify(token, phone, (tokenId) => {
       if (tokenId) {
         data.read('users', phone, (err, userData) => {
@@ -67,7 +65,6 @@ handler._users.get = (requestedProperties, callback) => {
 
 // post method
 handler._users.post = (requestedProperties, callback) => {
-  // console.log(requestedProperties);
   const firstName =
     typeof requestedProperties.body?.firstName === 'string' &&
     requestedProperties.body.firstName.trim().length > 0
@@ -97,8 +94,6 @@ handler._users.post = (requestedProperties, callback) => {
     requestedProperties.body?.tosAgreement === true
       ? true
       : false;
-
-  // console.log(firstName, lastName, phone, password, tosAgreement);
 
   if (firstName && lastName && phone && password && tosAgreement) {
     data.read('users', phone, (err) => {
@@ -240,8 +235,6 @@ handler._users.delete = (requestedProperties, callback) => {
         ? requestedProperties.headersObject.token
         : false;
 
-    // console.log(tokenHandler._token);
-    // console.log(_token);
     _token.verify(token, phone, (tokenId) => {
       if (tokenId) {
         data.read('users', phone, (err, userData) => {
